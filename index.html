@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gửi đến Hằng một điều đặc biệt 💌</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      overflow-y: auto;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,0.35), transparent 35%),
+        linear-gradient(135deg, #ffb6c1, #ffc3a0, #ffd6e7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 20px 0;
+    }
+
+    .hearts {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .heart {
+      position: absolute;
+      bottom: -40px;
+      font-size: 20px;
+      opacity: 0.75;
+      animation: floatUp linear infinite;
+    }
+
+    .heart:nth-child(1) { left: 8%; animation-duration: 9s; animation-delay: 0s; }
+    .heart:nth-child(2) { left: 18%; animation-duration: 11s; animation-delay: 2s; }
+    .heart:nth-child(3) { left: 30%; animation-duration: 8s; animation-delay: 1s; }
+    .heart:nth-child(4) { left: 42%; animation-duration: 12s; animation-delay: 3s; }
+    .heart:nth-child(5) { left: 55%; animation-duration: 10s; animation-delay: 1.5s; }
+    .heart:nth-child(6) { left: 68%; animation-duration: 9.5s; animation-delay: 2.5s; }
+    .heart:nth-child(7) { left: 80%; animation-duration: 11.5s; animation-delay: 0.8s; }
+    .heart:nth-child(8) { left: 90%; animation-duration: 8.5s; animation-delay: 2.2s; }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(0.8) rotate(0deg);
+        opacity: 0;
+      }
+      15% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-110vh) scale(1.2) rotate(25deg);
+        opacity: 0;
+      }
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+      max-width: 1100px;
+      min-height: 760px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 2;
+    }
+
+    .start-screen {
+      text-align: center;
+      animation: fadeIn 1.2s ease;
+      max-width: 700px;
+      padding: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .title {
+      font-size: clamp(30px, 5vw, 52px);
+      color: white;
+      margin-bottom: 14px;
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+    }
+
+    .subtitle {
+      font-size: clamp(16px, 2vw, 20px);
+      color: #fffafc;
+      margin-bottom: 28px;
+      opacity: 0.95;
+      line-height: 1.6;
+    }
+
+    .start-btn {
+      border: none;
+      padding: 16px 34px;
+      border-radius: 999px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.95);
+      color: #e85d8e;
+      box-shadow: 0 12px 30px rgba(232, 93, 142, 0.25);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .start-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 16px 36px rgba(232, 93, 142, 0.32);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .envelope-scene {
+      display: none;
+      position: relative;
+      width: 520px;
+      min-height: 620px;
+      animation: fadeIn 0.8s ease;
+      overflow: visible;
+      z-index: 2;
+    }
+
+    .hint {
+      position: absolute;
+      top: -54px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      text-shadow: 0 3px 12px rgba(0,0,0,0.15);
+      animation: pulse 1.8s infinite;
+      white-space: nowrap;
+      z-index: 20;
+    }
+
+    .confirm-box {
+      position: absolute;
+      top: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 320px;
+      max-width: 90%;
+      padding: 12px 18px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #d94f83;
+      text-align: center;
+      font-weight: 700;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      z-index: 20;
+    }
+
+    .confirm-box.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-8px);
+    }
+
+    .envelope {
+      position: absolute;
+      left: 50%;
+      top: 62%;
+      width: 430px;
+      height: 290px;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      filter: drop-shadow(0 18px 28px rgba(0,0,0,0.18));
+      transition: transform 0.35s ease;
+      overflow: visible;
+      z-index: 5;
+    }
+
+    .envelope:hover {
+      transform: translate(-50%, -52%) scale(1.02);
+    }
+
+    .envelope-base {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, #fff6fa, #ffe3ee);
+      border-radius: 0 0 22px 22px;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    .envelope-base::before,
+    .envelope-base::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(180deg, #ffd3e3, #ffbdd5);
+      z-index: 2;
+    }
+
+    .envelope-base::before {
+      left: 0;
+      clip-path: polygon(0 0, 100% 100%, 0 100%);
+    }
+
+    .envelope-base::after {
+      right: 0;
+      clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    }
+
+    .envelope-bottom {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 155px;
+      background: linear-gradient(180deg, #ffc8dd, #ffb3ce);
+      clip-path: polygon(0 0, 50% 75%, 100% 0, 100% 100%, 0 100%);
+      z-index: 3;
+    }
+
+    .flap {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 155px;
+      background: linear-gradient(180deg, #ffd9e8, #ffc3da);
+      clip-path: polygon(0 0, 50% 100%, 100% 0);
+      transform-origin: top center;
+      transition: transform 1s ease;
+      z-index: 6;
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+      backface-visibility: hidden;
+    }
+
+    .seal {
+      position: absolute;
+      left: 50%;
+      top: 128px;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ff8db5, #e94f86);
+      z-index: 7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      box-shadow: 0 6px 14px rgba(233, 79, 134, 0.35);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .letter {
+      position: absolute;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%) translateY(0);
+      width: 370px;
+      max-width: calc(100% - 40px);
+      height: 250px;
+      background:
+        linear-gradient(to bottom, rgba(255,192,203,0.12), rgba(255,192,203,0.03)),
+        #fffdfd;
+      border-radius: 16px;
+      z-index: 1;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+      padding: 26px 24px;
+      transition: transform 1.1s ease 0.2s, height 0.8s ease 0.6s;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: #f3a3bf #fff1f6;
+    }
+
+    .letter::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .letter::-webkit-scrollbar-track {
+      background: #fff1f6;
+      border-radius: 999px;
+    }
+
+    .letter::-webkit-scrollbar-thumb {
+      background: #f3a3bf;
+      border-radius: 999px;
+    }
+
+    .letter::before {
+      content: "";
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      right: 16px;
+      bottom: 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(232, 93, 142, 0.15);
+      pointer-events: none;
+    }
+
+    .letter h2 {
+      margin: 6px 0 14px;
+      color: #d94f83;
+      font-size: 30px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .letter p {
+      margin: 0;
+      color: #6f4b57;
+      font-size: 16px;
+      line-height: 1.9;
+      word-break: break-word;
+      position: relative;
+      z-index: 2;
+    }
+
+    .letter-content {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.8s ease 1.1s, transform 0.8s ease 1.1s;
+      position: relative;
+      z-index: 2;
+    }
+
+    .signature {
+      margin-top: 18px;
+      color: #d94f83;
+      font-weight: 700;
+      font-size: 17px;
+      text-align: right;
+    }
+
+    .open .flap {
+      transform: rotateX(180deg);
+      z-index: 0;
+    }
+
+    .open .seal {
+      opacity: 0;
+      transform: translateX(-50%) scale(0.6);
+    }
+
+    .open .letter {
+      transform: translateX(-50%) translateY(-95px);
+      height: 420px;
+      z-index: 15;
+    }
+
+    .open .letter-content {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .glow {
+      position: absolute;
+      width: 520px;
+      height: 520px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.28), transparent 65%);
+      left: 50%;
+      top: 62%;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: translateX(-50%) scale(1);
+      }
+      50% {
+        transform: translateX(-50%) scale(1.05);
+      }
+    }
+
+    @media (max-width: 700px) {
+      body {
+        align-items: flex-start;
+      }
+
+      .container {
+        min-height: auto;
+        padding: 30px 12px 40px;
+      }
+
+      .envelope-scene {
+        width: 100%;
+        max-width: 360px;
+        min-height: 560px;
+      }
+
+      .confirm-box {
+        min-width: auto;
+        width: 92%;
+        font-size: 14px;
+      }
+
+      .envelope {
+        width: 320px;
+        height: 220px;
+        top: 64%;
+      }
+
+      .envelope-bottom,
+      .flap {
+        height: 118px;
+      }
+
+      .seal {
+        top: 95px;
+        width: 52px;
+        height: 52px;
+        font-size: 22px;
+      }
+
+      .letter {
+        width: 272px;
+        height: 220px;
+        padding: 22px 18px;
+      }
+
+      .open .letter {
+        height: 360px;
+        transform: translateX(-50%) translateY(-80px);
+      }
+
+      .letter h2 {
+        font-size: 24px;
+      }
+
+      .letter p {
+        font-size: 15px;
+        line-height: 1.8;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hearts">
+    <div class="heart">💖</div>
+    <div class="heart">💕</div>
+    <div class="heart">💗</div>
+    <div class="heart">💝</div>
+    <div class="heart">💖</div>
+    <div class="heart">💕</div>
+    <div class="heart">💗</div>
+    <div class="heart">💝</div>
+  </div>
+
+  <div class="container">
+    <div class="start-screen" id="startScreen">
+      <div class="title">Có một điều muốn gửi đến Hằng 💌</div>
+      <div class="subtitle">Bấm vào bên dưới để mở món quà nhỏ này nhé</div>
+      <button class="start-btn" id="startBtn">Mở quà</button>
+    </div>
+
+    <div class="envelope-scene" id="envelopeScene">
+      <div class="hint" id="hintText">Bấm vào lá thư nhé ✨</div>
+      <div class="confirm-box" id="confirmBox"></div>
+      <div class="glow"></div>
+
+      <div class="envelope" id="envelope">
+        <div class="letter">
+          <div class="letter-content">
+            <h2>Chúc mừng sinh nhật (22/3/2002) 🎂</h2>
+            <p>
+              Hôm nay là một ngày thật đặc biệt, vì đó là ngày một người tuyệt vời xuất hiện trên thế giới.<br><br>
+
+              Chúc bạn luôn vui vẻ, bình an, gặp nhiều may mắn và nhận được thật nhiều yêu thương.<br><br>
+
+              Mong rằng những điều tớ mang lại sẽ mang đến cho bạn thật nhiều nụ cười, vì bạn cười giống một thiên thần lắm đó.<br><br>
+
+              Mong bạn có thể trở thành em bé nhiều hơn khi đồng hành cùng mình,nói đúng hơn là làm người khuyết tật nhiều hơn đi.<br><br>
+
+              Dù sao thì đối với mình thì bạn rất xinh đẹp đó,nên đừng có dại mà cắm đầu cắm cổ mà đi làm,dốt lắm cơ.<br><br>
+
+              Và bạn đừng có giấu tớ điều gì nhó,vì tớ đôi khi thương bạn một cách vụng về lắm (xin lỗi tớ hơi dốt văn mặc dù học khối văn huhu )  💖
+            </p>
+            <div class="signature">— 阮明富 💗</div>
+          </div>
+        </div>
+
+        <div class="envelope-base"></div>
+        <div class="envelope-bottom"></div>
+        <div class="flap"></div>
+        <div class="seal">💗</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const startBtn = document.getElementById("startBtn");
+    const startScreen = document.getElementById("startScreen");
+    const envelopeScene = document.getElementById("envelopeScene");
+    const envelope = document.getElementById("envelope");
+    const confirmBox = document.getElementById("confirmBox");
+    const hintText = document.getElementById("hintText");
+
+    let opened = false;
+    let stepIndex = 0;
+
+    const steps = [
+      "Bạn chắc là muốn mở chứ? 💭",
+      "Bên trong có điều rất đặc biệt đó nha 💌",
+      "Bấm lần cuối 😳",
+      "Bấm lần cuối của cuối 🥺",
+      "Được rồi... bấm thêm 1 lần nữa để mở nha ✨"
+    ];
+
+    function showConfirmMessage(message) {
+      confirmBox.textContent = message;
+      confirmBox.classList.add("show");
+
+      clearTimeout(confirmBox._hideTimer);
+      confirmBox._hideTimer = setTimeout(() => {
+        confirmBox.classList.remove("show");
+      }, 1800);
+    }
+
+    startBtn.addEventListener("click", () => {
+      startScreen.classList.add("hidden");
+      envelopeScene.style.display = "block";
+    });
+
+    envelope.addEventListener("click", () => {
+      if (opened) return;
+
+      if (stepIndex < steps.length) {
+        showConfirmMessage(steps[stepIndex]);
+        hintText.textContent = "Bấm tiếp đi nè 💖";
+        stepIndex++;
+        return;
+      }
+
+      opened = true;
+      hintText.textContent = "Lá thư đã mở rồi nè 💕";
+      confirmBox.classList.remove("show");
+      envelope.classList.add("open");
+    });
+  </script>
+</body>
+</html>
