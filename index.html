@@ -3,26 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gửi đến Hằng một điều đặc biệt 💌</title>
+  <title>Nguyễn Thị Thúy Hắng - 翠姮</title>
   <style>
+    :root {
+  --scene-width: min(94vw, 760px);
+  --envelope-width: min(82vw, 500px);
+  --letter-width: min(76vw, 520px);
+  --letter-closed-height: 260px;
+  --letter-open-height: clamp(460px, 70vh, 680px);
+  --letter-open-shift: 120px;
+}
+
     * {
       box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
       margin: 0;
       min-height: 100vh;
       overflow-x: hidden;
-      overflow-y: auto;
+      overflow-y: hidden;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       background:
         radial-gradient(circle at top, rgba(255,255,255,0.35), transparent 35%),
         linear-gradient(135deg, #ffb6c1, #ffc3a0, #ffd6e7);
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       position: relative;
-      padding: 20px 0;
+      padding: 24px 0;
     }
 
     .hearts {
@@ -79,17 +92,18 @@
     .start-screen {
       text-align: center;
       animation: fadeIn 1.2s ease;
-      max-width: 700px;
-      padding: 20px;
+      max-width: 720px;
+      padding: 24px;
       position: relative;
       z-index: 2;
     }
 
     .title {
-      font-size: clamp(30px, 5vw, 52px);
+      font-size: clamp(30px, 5vw, 54px);
       color: white;
       margin-bottom: 14px;
       text-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+      line-height: 1.2;
     }
 
     .subtitle {
@@ -97,7 +111,7 @@
       color: #fffafc;
       margin-bottom: 28px;
       opacity: 0.95;
-      line-height: 1.6;
+      line-height: 1.7;
     }
 
     .start-btn {
@@ -125,34 +139,45 @@
     .envelope-scene {
       display: none;
       position: relative;
-      width: 520px;
-      min-height: 620px;
+      width: var(--scene-width);
+      min-height: 700px;
+      padding-top: 48px;
+      padding-bottom: 64px;
       animation: fadeIn 0.8s ease;
       overflow: visible;
       z-index: 2;
     }
 
+    .envelope-scene.opened {
+      min-height: max(760px, calc(var(--letter-open-height) + 330px));
+      padding-bottom: 120px;
+    }
+
     .hint {
       position: absolute;
-      top: -54px;
+      top: clamp(148px, 19vh, 188px);
       left: 50%;
       transform: translateX(-50%);
+      width: min(92vw, 520px);
       color: white;
-      font-size: 16px;
+      font-size: clamp(14px, 2.2vw, 16px);
       font-weight: 600;
       text-shadow: 0 3px 12px rgba(0,0,0,0.15);
       animation: pulse 1.8s infinite;
-      white-space: nowrap;
-      z-index: 20;
+      white-space: normal;
+      line-height: 1.5;
+      z-index: 2;
+      text-align: center;
+      padding: 0 12px;
     }
 
     .confirm-box {
       position: absolute;
-      top: -5px;
+      top: 42px;
       left: 50%;
       transform: translateX(-50%);
       min-width: 320px;
-      max-width: 90%;
+      max-width: min(90%, 420px);
       padding: 12px 18px;
       border-radius: 16px;
       background: rgba(255, 255, 255, 0.95);
@@ -171,12 +196,25 @@
       transform: translateX(-50%) translateY(-8px);
     }
 
+    .glow {
+      position: absolute;
+      width: min(92vw, 540px);
+      height: min(92vw, 540px);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.28), transparent 65%);
+      left: 50%;
+      top: 58%;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
     .envelope {
       position: absolute;
       left: 50%;
-      top: 62%;
-      width: 430px;
-      height: 290px;
+      top: 61%;
+      width: var(--envelope-width);
+      aspect-ratio: 43 / 29;
       transform: translate(-50%, -50%);
       cursor: pointer;
       filter: drop-shadow(0 18px 28px rgba(0,0,0,0.18));
@@ -224,7 +262,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      height: 155px;
+      height: 53.5%;
       background: linear-gradient(180deg, #ffc8dd, #ffb3ce);
       clip-path: polygon(0 0, 50% 75%, 100% 0, 100% 100%, 0 100%);
       z-index: 3;
@@ -235,7 +273,7 @@
       left: 0;
       right: 0;
       top: 0;
-      height: 155px;
+      height: 53.5%;
       background: linear-gradient(180deg, #ffd9e8, #ffc3da);
       clip-path: polygon(0 0, 50% 100%, 100% 0);
       transform-origin: top center;
@@ -249,10 +287,10 @@
     .seal {
       position: absolute;
       left: 50%;
-      top: 128px;
+      top: 44%;
       transform: translateX(-50%);
-      width: 60px;
-      height: 60px;
+      width: clamp(52px, 12vw, 60px);
+      height: clamp(52px, 12vw, 60px);
       border-radius: 50%;
       background: radial-gradient(circle at 30% 30%, #ff8db5, #e94f86);
       z-index: 7;
@@ -260,32 +298,33 @@
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 24px;
+      font-size: clamp(22px, 4vw, 24px);
       box-shadow: 0 6px 14px rgba(233, 79, 134, 0.35);
       transition: opacity 0.4s ease, transform 0.4s ease;
     }
 
     .letter {
-      position: absolute;
-      left: 50%;
-      bottom: 22px;
-      transform: translateX(-50%) translateY(0);
-      width: 370px;
-      max-width: calc(100% - 40px);
-      height: 250px;
-      background:
-        linear-gradient(to bottom, rgba(255,192,203,0.12), rgba(255,192,203,0.03)),
-        #fffdfd;
-      border-radius: 16px;
-      z-index: 1;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.1);
-      padding: 26px 24px;
-      transition: transform 1.1s ease 0.2s, height 0.8s ease 0.6s;
-      overflow-y: auto;
-      overflow-x: hidden;
-      scrollbar-width: thin;
-      scrollbar-color: #f3a3bf #fff1f6;
-    }
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%) translateY(0);
+  width: var(--letter-width);
+  max-width: calc(100% - 24px);
+  height: var(--letter-closed-height);
+  background:
+    linear-gradient(to bottom, rgba(255,192,203,0.12), rgba(255,192,203,0.03)),
+    #fffdfd;
+  border-radius: 18px;
+  z-index: 1;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+  padding: 24px 22px 26px;
+  transition: transform 1.05s ease 0.15s, height 0.75s ease 0.5s;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #f3a3bf #fff1f6;
+  overscroll-behavior: contain;
+}
 
     .letter::-webkit-scrollbar {
       width: 8px;
@@ -316,8 +355,9 @@
     .letter h2 {
       margin: 6px 0 14px;
       color: #d94f83;
-      font-size: 30px;
+      font-size: clamp(24px, 4.2vw, 30px);
       text-align: center;
+      line-height: 1.35;
       position: relative;
       z-index: 2;
     }
@@ -325,7 +365,7 @@
     .letter p {
       margin: 0;
       color: #6f4b57;
-      font-size: 16px;
+      font-size: clamp(15px, 2.3vw, 16px);
       line-height: 1.9;
       word-break: break-word;
       position: relative;
@@ -333,9 +373,13 @@
     }
 
     .letter-content {
+      max-height: 100%;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+
       opacity: 0;
       transform: translateY(14px);
-      transition: opacity 0.8s ease 1.1s, transform 0.8s ease 1.1s;
+      transition: opacity 0.8s ease 1.05s, transform 0.8s ease 1.05s;
       position: relative;
       z-index: 2;
     }
@@ -359,27 +403,14 @@
     }
 
     .open .letter {
-      transform: translateX(-50%) translateY(-95px);
-      height: 420px;
-      z-index: 15;
-    }
+  transform: translateX(-50%) translateY(calc(-1 * var(--letter-open-shift)));
+  height: var(--letter-open-height);
+  z-index: 15;
+}
 
     .open .letter-content {
       opacity: 1;
       transform: translateY(0);
-    }
-
-    .glow {
-      position: absolute;
-      width: 520px;
-      height: 520px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,0.28), transparent 65%);
-      left: 50%;
-      top: 62%;
-      transform: translate(-50%, -50%);
-      z-index: -1;
-      pointer-events: none;
     }
 
     @keyframes fadeIn {
@@ -403,63 +434,77 @@
     }
 
     @media (max-width: 700px) {
+      :root {
+    --scene-width: min(100vw, 420px);
+    --envelope-width: min(90vw, 340px);
+    --letter-width: min(88vw, 320px);
+    --letter-closed-height: 220px;
+    --letter-open-height: clamp(420px, 68vh, 560px);
+    --letter-open-shift: 92px;
+  }
+
       body {
         align-items: flex-start;
+        padding: 14px 0 24px;
       }
 
       .container {
         min-height: auto;
-        padding: 30px 12px 40px;
+        padding: 24px 12px 36px;
+      }
+
+      .start-screen {
+        padding: 16px 10px;
       }
 
       .envelope-scene {
-        width: 100%;
-        max-width: 360px;
-        min-height: 560px;
+        min-height: 600px;
+        padding-top: 42px;
+        padding-bottom: 52px;
+      }
+
+      .envelope-scene.opened {
+        min-height: calc(var(--letter-open-height) + 270px);
+        padding-bottom: 90px;
+      }
+
+      .hint {
+        top: clamp(132px, 24vw, 168px);
+        width: min(94vw, 360px);
+        font-size: 14px;
+        white-space: normal;
+        line-height: 1.45;
+        padding: 0 14px;
       }
 
       .confirm-box {
         min-width: auto;
         width: 92%;
+        top: 38px;
         font-size: 14px;
       }
 
       .envelope {
-        width: 320px;
-        height: 220px;
-        top: 64%;
+        top: 63%;
       }
 
-      .envelope-bottom,
-      .flap {
-        height: 118px;
-      }
+        .letter {
+    padding: 20px 16px 22px;
+  }
 
-      .seal {
-        top: 95px;
-        width: 52px;
-        height: 52px;
-        font-size: 22px;
-      }
+  .letter p {
+    font-size: 15px;
+    line-height: 1.8;
+  }
 
-      .letter {
-        width: 272px;
-        height: 220px;
-        padding: 22px 18px;
+      .signature {
+        font-size: 16px;
       }
+    }
 
-      .open .letter {
-        height: 360px;
-        transform: translateX(-50%) translateY(-80px);
-      }
-
-      .letter h2 {
-        font-size: 24px;
-      }
-
-      .letter p {
-        font-size: 15px;
-        line-height: 1.8;
+    @media (min-width: 1200px) {
+      .container {
+        min-height: 820px;
       }
     }
   </style>
@@ -489,7 +534,7 @@
       <div class="glow"></div>
 
       <div class="envelope" id="envelope">
-        <div class="letter">
+        <div class="letter" id="letterCard">
           <div class="letter-content">
             <h2>Chúc mừng sinh nhật (22/3/2002) 🎂</h2>
             <p>
@@ -499,11 +544,11 @@
 
               Mong rằng những điều tớ mang lại sẽ mang đến cho bạn thật nhiều nụ cười, vì bạn cười giống một thiên thần lắm đó.<br><br>
 
-              Mong bạn có thể trở thành em bé nhiều hơn khi đồng hành cùng mình,nói đúng hơn là làm người khuyết tật nhiều hơn đi.<br><br>
+              Mong bạn có thể trở thành em bé nhiều hơn khi đồng hành cùng mình, nói đúng hơn là làm người khuyết tật nhiều hơn đi.<br><br>
 
-              Dù sao thì đối với mình thì bạn rất xinh đẹp đó,nên đừng có dại mà cắm đầu cắm cổ mà đi làm,dốt lắm cơ.<br><br>
+              Dù sao thì đối với mình thì bạn rất xinh đẹp đó, nên đừng có dại mà cắm đầu cắm cổ mà đi làm, dốt lắm cơ.<br><br>
 
-              Và bạn đừng có giấu tớ điều gì nhó,vì tớ đôi khi thương bạn một cách vụng về lắm (xin lỗi tớ hơi dốt văn mặc dù học khối văn huhu )  💖
+              Và bạn đừng có giấu tớ điều gì nhó, vì tớ đôi khi thương bạn một cách vụng về lắm (xin lỗi tớ hơi dốt văn mặc dù học khối văn huhu) 💖
             </p>
             <div class="signature">— 阮明富 💗</div>
           </div>
@@ -524,6 +569,7 @@
     const envelope = document.getElementById("envelope");
     const confirmBox = document.getElementById("confirmBox");
     const hintText = document.getElementById("hintText");
+    const letterCard = document.getElementById("letterCard");
 
     let opened = false;
     let stepIndex = 0;
@@ -565,6 +611,13 @@
       hintText.textContent = "Lá thư đã mở rồi nè 💕";
       confirmBox.classList.remove("show");
       envelope.classList.add("open");
+      envelopeScene.classList.add("opened");
+
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          letterCard.scrollTop = 0;
+        }, 450);
+      });
     });
   </script>
 </body>
